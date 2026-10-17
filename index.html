@@ -416,7 +416,7 @@ $('addForm').onsubmit=async ev=>{
   $('aGo').disabled=false;
 };
 function shareShop(s){
-  const url=location.origin+location.pathname+'?shop='+encodeURIComponent(s.id),data={title:s.name+' · 4fix',text:s.name+(s.phone?' โทร '+s.phone:'')+' — ร้านซ่อมใน 4fix',url};
+  const url=location.origin+location.pathname+'?shop='+encodeURIComponent(s.id),data={url}; // แชร์เฉพาะลิงก์ ไม่มีข้อความอธิบาย
   track('click',{k:'share',id:s.id,name:s.name,cat:s.cat});
   if(navigator.share)navigator.share(data).catch(()=>{});else{try{navigator.clipboard.writeText(url);toast('คัดลอกลิงก์ร้านแล้ว')}catch(e){toast('คัดลอกไม่สำเร็จ')}}
 }
