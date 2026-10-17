@@ -416,13 +416,14 @@ $('addForm').onsubmit=async ev=>{
   $('aGo').disabled=false;
 };
 function shareShop(s){
-  const url=location.origin+location.pathname+'?shop='+encodeURIComponent(s.id),data={url}; // แชร์เฉพาะลิงก์ ไม่มีข้อความอธิบาย
+  // แชร์เฉพาะลิงก์ — หน้าตัวอย่าง (ชื่อ ดาว เบอร์ รูป) ให้ LINE/เว็บอื่นดึงเองจาก s.php แล้วกดเข้าแอปที่ร้านนั้น
+  const url=FIXLOG+'s.php?id='+encodeURIComponent(s.id);
   track('click',{k:'share',id:s.id,name:s.name,cat:s.cat});
-  if(navigator.share)navigator.share(data).catch(()=>{});else{try{navigator.clipboard.writeText(url);toast('คัดลอกลิงก์ร้านแล้ว')}catch(e){toast('คัดลอกไม่สำเร็จ')}}
+  if(navigator.share)navigator.share({url}).catch(()=>{});else{try{navigator.clipboard.writeText(url);toast('คัดลอกลิงก์ร้านแล้ว')}catch(e){toast('คัดลอกไม่สำเร็จ')}}
 }
 function handleParams(){
   const sp=new URLSearchParams(location.search),q=sp.get('shop'),sh=[sp.get('title'),sp.get('text'),sp.get('url')].filter(Boolean).join('\n');
-  if(q){const s=S.find(x=>x.id===q);if(s){cat='';sub='';pick(q);map.setView([s.lat,s.lng],16)}}
+  if(q){const s=S.find(x=>x.id===q);if(s){cat=s.cat;sub=s.cat==='cam'?(s.sub||''):'';shown=40;anim=true;pick(q);map.setView([s.lat,s.lng],16)}} // เข้าหมวด/หมวดย่อยของร้านที่แชร์มาเลย
   if(/https?:\/\//.test(sh))openDlg(sh);
   if(q||sh)history.replaceState(null,'',location.pathname);
 }
