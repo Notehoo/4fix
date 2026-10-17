@@ -30,7 +30,15 @@ button{cursor:pointer}
 
 /* หัวเว็บ */
 .hero{position:relative;overflow:hidden;background:linear-gradient(90deg,#cfe6e4 0,#cfe6e4 38%,rgba(207,230,228,0) 75%),#cfe6e4 url(hero.jpg) right 20%/auto 130% no-repeat;border-bottom:1px solid var(--line)}
-@media (max-width:640px){.hero{background:linear-gradient(90deg,#cfe6e4 0,rgba(207,230,228,.95) 80%,rgba(207,230,228,.45) 100%),#cfe6e4 url(hero.jpg) 72% 20%/auto 140% no-repeat}}
+@media (max-width:640px){
+ .hero{background:linear-gradient(90deg,#cfe6e4 0,#cfe6e4 46%,rgba(207,230,228,0) 72%),#cfe6e4 url(hero.jpg) right 0 top 30%/auto 170% no-repeat}
+ .hero .in{padding-block:12px 10px;min-height:0;padding-right:36%}
+ .hero .logo{gap:7px}.hero .logo h1{font-size:clamp(21px,7.2vw,32px)}
+ .hero .logo h1 .tail{display:block;text-align:right;font-size:.56em;margin:1px 0 0}
+ .hero .screw{width:24px}
+ .hero .in p{font-size:14px;margin-top:4px;max-width:none;line-height:1.35}
+ .hero .gear.g1{width:70px}.hero .gear.g2{display:none}
+}
 .hero .in{position:relative;z-index:1;max-width:1100px;margin:auto;padding-block:22px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:center}
 .logo{display:flex;align-items:center;gap:10px}
 .logo{min-width:0}.logo h1{margin:0;white-space:nowrap;font-size:clamp(22px,10.5vw,44px);line-height:1.15;font-weight:700;color:#0b3f3a;letter-spacing:-.5px;text-shadow:0 1px 0 rgba(255,255,255,.6)}
@@ -89,6 +97,19 @@ main{max-width:1100px;margin:auto;display:grid;grid-template-columns:minmax(0,1f
 .card:hover{transform:translateY(-2px)}
 .card.in{animation:up .45s both;animation-delay:calc(var(--i,0)*45ms)}
 .card.sel{outline:3px solid var(--or)}
+.hd{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
+.th{width:54px;height:54px;border-radius:10px;object-fit:cover;flex:0 0 auto;background:var(--sf2);border:1px solid var(--line)}
+.meta small{font-weight:500;color:var(--mut)}
+.tr{font-size:13.5px;font-weight:700;border-radius:999px;padding:0 9px;border:1.5px solid currentColor;line-height:1.5}
+.tr.hi{color:var(--ok)}.tr.mid{color:var(--ac)}.tr.lo{color:#b9480f}.tr.no{color:var(--mut);border-style:dashed}
+@media (prefers-color-scheme:dark){.tr.lo{color:#f0894a}}
+.gal{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none}.gal::-webkit-scrollbar{display:none}
+.gal img{width:112px;height:84px;object-fit:cover;border-radius:10px;display:block;background:var(--sf2)}
+.gcap{font-size:13px;color:var(--mut);margin-top:3px}
+.hist{margin-top:8px;display:grid;gap:2px;font-size:13px;color:var(--mut)}
+.hist div{display:grid;grid-template-columns:30px 1fr 34px;align-items:center;gap:6px}
+.hist b{font-weight:700}.hist em{font-style:normal;text-align:right}
+.hist i{display:block;height:6px;border-radius:3px;background:var(--star);min-width:2px}
 .card h3{margin:0;font-size:18px;font-weight:700;line-height:1.35;overflow-wrap:anywhere}
 .tag{display:inline-block;font-size:14px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:1px}
 .meta{margin-top:4px;display:flex;flex-wrap:wrap;gap:2px 12px;font-size:15.5px;color:var(--mut)}
@@ -105,6 +126,12 @@ main{max-width:1100px;margin:auto;display:grid;grid-template-columns:minmax(0,1f
 .more{align-self:center}
 .sk{height:104px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(100deg,var(--sf) 30%,var(--sf2) 50%,var(--sf) 70%) 0 0/300% 100%;animation:sh 1.3s linear infinite}
 @keyframes sh{to{background-position:-300% 0}}
+.rail{position:fixed;right:2px;top:52%;transform:translateY(-50%);z-index:30;display:none;flex-direction:column;align-items:center;gap:6px;opacity:.6;transition:opacity .35s}
+.rail.on{opacity:1}
+.rail button{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:var(--sf);color:var(--ac);font-size:11px;line-height:1;padding:0;box-shadow:var(--sh)}
+.rt{position:relative;width:8px;height:30vh;border-radius:4px;background:color-mix(in srgb,var(--ac) 24%,transparent);cursor:pointer}
+.rt i{position:absolute;left:0;right:0;top:0;height:30px;border-radius:4px;background:var(--ac);transition:top .12s}
+@media (max-width:820px){.rail{display:flex}main{padding-left:8px;padding-right:22px}}
 .catpin{position:relative;width:30px;height:42px}
 .leaflet-container .leaflet-marker-pane .catpin img{position:absolute;left:0;top:0;width:30px;height:auto;transform-origin:50% 100%;animation:hop 2.4s ease-in-out infinite;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 .catpin i{position:absolute;left:5px;bottom:0;width:20px;height:5px;border-radius:50%;background:rgba(0,0,0,.28);animation:shd 2.4s ease-in-out infinite}
@@ -146,7 +173,7 @@ footer a{color:var(--ac)}
     <div class="row">
       <label class="q"><span aria-hidden="true">🔎</span><input id="q" type="search" placeholder="ชื่อร้าน / ซอย / หมู่บ้าน เช่น พระปิ่น 3" autocomplete="off"></label>
       <select id="rad" aria-label="ระยะ"><option value="3">ใน 3 กม.</option><option value="5">ใน 5 กม.</option><option value="10">ใน 10 กม.</option><option value="25">ใน 25 กม.</option><option value="0" selected>ทุกระยะ</option></select>
-      <select id="sort" aria-label="เรียง"><option value="near">ใกล้สุดก่อน</option><option value="rate">ดาวสูงสุด</option></select>
+      <select id="sort" aria-label="เรียง"><option value="near">ใกล้สุดก่อน</option><option value="trust">น่าเชื่อถือสุด</option><option value="rate">ดาวสูงสุด</option></select>
     </div>
     <div class="where" id="where"></div>
   </div></div>
@@ -158,6 +185,7 @@ footer a{color:var(--ac)}
 </main>
 <footer class="gut">ข้อมูลร้านรวบรวมจาก Google Maps (ต.ค. 2569) · ดาวรีวิวเป็นของ Google ใช้ประกอบการตัดสินใจเท่านั้น ควรโทรสอบถามราคาและเวลาเปิดก่อนไปทุกครั้ง · แผนที่ © OpenStreetMap · <a href="https://github.com/Notehoo/4fix#readme">เกี่ยวกับ/ความเป็นส่วนตัว</a></footer>
 
+<div class="rail" id="rail" aria-hidden="true"><button id="rUp" tabindex="-1">▲</button><div class="rt" id="rTrack"><i id="rThumb"></i></div><button id="rDn" tabindex="-1">▼</button></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ===== บันทึกการใช้งาน (ส่งไป bangkho.ac.th/fixlog) ===== */
@@ -196,13 +224,13 @@ function view(){
   a.forEach(s=>s.d=km(org,s));
   if(R)a=a.filter(s=>s.d<=R);
   const by=$('sort').value;
-  a.sort(by==='rate'?(x,y)=>(y.rating||0)-(x.rating||0)||x.d-y.d:(x,y)=>x.d-y.d);
+  a.sort(by==='trust'?(x,y)=>trust(y).score-trust(x).score||x.d-y.d:by==='rate'?(x,y)=>(y.rating||0)-(x.rating||0)||x.d-y.d:(x,y)=>x.d-y.d);
   return a;
 }
 function render(){
   const a=view();
   $('cnt').innerHTML=`พบ <b>${a.length}</b> ร้าน`;
-  $('msum').textContent=(cat?CATS[cat][0]+' '+CATS[cat][1]+(sub?' › '+SUBS[sub][1].split(' ')[0]:''):'🔧 ทุกหมวด')+' · '+(+$('rad').value?'ใน '+$('rad').value+' กม.':'ทุกระยะ')+' · '+a.length+' ร้าน';
+  $('msum').textContent=(cat?CATS[cat][0]+' '+CATS[cat][1]+(sub?' › '+SUBS[sub][1].split(' ')[0]:''):'🔧 ทุกหมวด')+(+$('rad').value?' · ≤'+$('rad').value+'กม.':'')+' · '+a.length+' ร้าน';
   const q=$('q').value.trim().toLowerCase(),R=+$('rad').value,cn={};
   const cs={};
   S.forEach(s=>{if(q&&!(s.name+' '+s.addr+' '+s.type).toLowerCase().includes(q))return;if(R&&km(org,s)>R)return;cn[s.cat]=(cn[s.cat]||0)+1;if(s.cat2)cn[s.cat2]=(cn[s.cat2]||0)+1;if(cat==='cam'&&inCat(s,'cam')){const u=subOf(s,'cam');cs[u]=(cs[u]||0)+1}});
@@ -216,16 +244,40 @@ function render(){
   if(!a.length)track('empty',{q:$('q').value.trim().slice(0,60),cat,rad:R});
   anim=false;
 }
+const IMG='https://lh3.googleusercontent.com/';
+function trust(s){ // ความน่าเชื่อถือจากจำนวนรีวิว+กราฟดาว (ค่าเฉลี่ยแบบถ่วงกับค่ากลาง 4.2 น้ำหนัก 8 รีวิว)
+  const n=s.rv||0;let avg=s.rating||0;
+  if(s.h&&n){const m=s.h.reduce((a,b)=>a+b,0);if(m)avg=(s.h[0]*5+s.h[1]*4+s.h[2]*3+s.h[3]*2+s.h[4])/m}
+  const score=n?(n*avg+8*4.2)/(n+8):0;let tier='',cls='';
+  if(s.rv===undefined){}
+  else if(n>=20&&avg>=4.3){tier='✅ น่าเชื่อถือ';cls='hi'}
+  else if(n>=8&&avg>=3.8){tier='👍 รีวิวพอใช้';cls='mid'}
+  else if(n>=1){tier='⚠️ รีวิวน้อย';cls='lo'}
+  else{tier='ยังไม่มีรีวิว';cls='no'}
+  return{avg,n,score,tier,cls};
+}
+function rateHtml(s){
+  const t=trust(s);
+  if(s.rv===undefined)return s.rating?`<span class="r">★ ${s.rating.toFixed(1)}</span>`:'<span>ไม่มีรีวิว</span>';
+  return (t.n?`<span class="r">★ ${t.avg.toFixed(1)} <small>(${t.n})</small></span>`:'')+`<span class="tr ${t.cls}">${t.tier}</span>`+(s.tmp?'<span class="tr lo">ปิดชั่วคราว</span>':'');
+}
+function galHtml(s,g){
+  let h='';
+  if(s.h&&s.rv){const mx=Math.max(...s.h,1);h+=`<div class="hist" aria-label="กราฟดาว">${s.h.map((v,i)=>`<div><b>${5-i}★</b><i style="width:${Math.round(v/mx*100)}%"></i><em>${v}</em></div>`).join('')}</div>`}
+  if(s.im&&s.im.length)h+=`<div class="gal">${s.im.slice(0,4).map(u=>`<a data-k="photo" href="${g}" target="_blank" rel="noopener"><img loading="lazy" referrerpolicy="no-referrer" src="${IMG}${u}=w300-h225-c" alt="รูปจากผู้ใช้ Google Maps"></a>`).join('')}</div><div class="gcap">รูปจากผู้ใช้ Google Maps${s.ph?` · ทั้งหมด ${s.ph} รูป`:''}</div>`;
+  return h;
+}
 function card(s,i){
   const cc=(cat&&s.cat2===cat)?cat:s.cat,u=subOf(s,cc),c=(cc==='cam'&&SUBS[u])?[SUBS[u][0],SUBS[u][1].split(' ')[0],CATS.cam[2]]:CATS[cc],g=`https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}&query_place_id=${s.id}`,
   dir=`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&destination_place_id=${s.id}`;
   return `<article class="card${anim?' in':''}${sel===s.id?' sel':''}" id="c-${esc(s.id)}" style="--c:${c[2]};--i:${Math.min(i,10)}">
-  <h3>${esc(s.name)}</h3>
+  <div class="hd"><h3>${esc(s.name)}</h3>${s.im&&s.im.length?`<img class="th" loading="lazy" referrerpolicy="no-referrer" src="${IMG}${s.im[0]}=w120-h120-c" alt="">`:''}</div>
   <div class="meta"><span><span class="tag">${c[0]} ${c[1]}</span>${esc(s.type||'')}</span>
    <span class="d">${s.d<1?Math.round(s.d*1000)+' ม.':s.d.toFixed(1)+' กม.'}</span>
-   ${s.rating?`<span class="r">★ ${s.rating.toFixed(1)}</span>`:'<span>ไม่มีรีวิว</span>'}
+   ${rateHtml(s)}
    ${s.hours?`<span>${esc(s.hours)}</span>`:''}</div>
   ${s.addr?`<div class="addr">${esc(s.addr)}</div>`:''}
+  ${sel===s.id?galHtml(s,g):''}
   <div class="acts">${s.phone?`<a class="a call" data-k="call" href="tel:${s.phone.replace(/-/g,'')}">📞 ${s.phone}</a>`:''}<a class="a go" data-k="nav" href="${dir}" target="_blank" rel="noopener">🧭 นำทาง</a><a class="a ico" data-k="maps" href="${g}" target="_blank" rel="noopener" aria-label="ดูรีวิวใน Google Maps" title="รีวิวใน Google Maps">🗺️</a></div></article>`;
 }
 function pick(id){
@@ -243,11 +295,12 @@ function setOrg(lat,lng,name,gps){
 function fit(){const a=view().slice(0,15).map(s=>[s.lat,s.lng]);a.push([org.lat,org.lng]);map.fitBounds(a,{padding:[30,30],maxZoom:15})}
 const fl=()=>track('filter',{cat,rad:+$('rad').value,sort:$('sort').value});
 
-$('chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;sub='';shown=40;anim=true;render();fit();fl()};
-$('subs').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sub=b.dataset.s;shown=40;anim=true;render();fit();track('filter',{cat,sub,rad:+$('rad').value,sort:$('sort').value})};
+$('chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;sub='';shown=40;anim=true;render();fit();fl();menu.done()};
+$('subs').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sub=b.dataset.s;shown=40;anim=true;render();fit();track('filter',{cat,sub,rad:+$('rad').value,sort:$('sort').value});menu.done()};
 let qt;$('q').oninput=()=>{shown=40;render();clearTimeout(qt);qt=setTimeout(()=>{fit();const q=$('q').value.trim();if(q.length>=2)track('search',{q:q.slice(0,60),cat,n:view().length})},900)};
-$('rad').onchange=()=>{shown=40;anim=true;render();fit();fl()};
-$('sort').onchange=()=>{anim=true;render();fl()};
+$('rad').onchange=()=>{shown=40;anim=true;render();fit();fl();menu.done()};
+$('sort').onchange=()=>{anim=true;render();fl();menu.done()};
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter'){$('q').blur();menu.done()}});
 $('list').onclick=e=>{
   const a=e.target.closest('a[data-k]'),c=e.target.closest('.card');
   if(a&&c){const s=S.find(x=>x.id===c.id.slice(2));track('click',{k:a.dataset.k,id:s.id,name:s.name,cat:s.cat,d:Math.round(s.d*10)/10});return}
@@ -257,27 +310,37 @@ $('list').onclick=e=>{
 $('gps').onclick=()=>{
   if(!navigator.geolocation){track('gps',{r:'no'});alert('เครื่องนี้ไม่รองรับตำแหน่ง');return}
   $('gps').textContent='กำลังหาตำแหน่ง…';
-  navigator.geolocation.getCurrentPosition(p=>{$('gps').textContent='📍 ใกล้ฉัน';track('gps',{r:'ok',la:r2(p.coords.latitude),lo:r2(p.coords.longitude)});setOrg(p.coords.latitude,p.coords.longitude,'ตำแหน่งของคุณ',true)},()=>{$('gps').textContent='📍 ใกล้ฉัน';track('gps',{r:'no'});alert('ขอตำแหน่งไม่สำเร็จ — เปิดสิทธิ์ตำแหน่งในเบราว์เซอร์ หรือใช้ระยะจากโรงเรียนแทน')},{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+  navigator.geolocation.getCurrentPosition(p=>{$('gps').textContent='📍 ใกล้ฉัน';track('gps',{r:'ok',la:r2(p.coords.latitude),lo:r2(p.coords.longitude)});setOrg(p.coords.latitude,p.coords.longitude,'ตำแหน่งของคุณ',true);menu.done()},()=>{$('gps').textContent='📍 ใกล้ฉัน';track('gps',{r:'no'});alert('ขอตำแหน่งไม่สำเร็จ — เปิดสิทธิ์ตำแหน่งในเบราว์เซอร์ หรือใช้ระยะจากโรงเรียนแทน')},{enableHighAccuracy:true,timeout:15000,maximumAge:0});
 };
 map.on('click',e=>{track('gps',{r:'tap',la:r2(e.latlng.lat),lo:r2(e.latlng.lng)});setOrg(e.latlng.lat,e.latlng.lng,'จุดที่คุณแตะบนแผนที่',true)});
 
-/* เมนูหมวด: แถบเล็กเห็นตลอด · แผงคลี่ออกเองช้าๆ ตอนเปิดหน้า · เลื่อนลง=หุบ เลื่อนขึ้น=คลี่ · กดแถบเพื่อสลับเอง */
-(()=>{
-  const bar=$('bar'),mb=$('mbtn');let last=scrollY,acc=0,tk=false,lock=0,isOpen=true;
+/* เมนูหมวด: แถบเล็กเห็นตลอด · คอม: คลี่ออกเองช้าๆ + เลื่อนขึ้นคลี่ · มือถือ: หุบเสมอ เปิดเมื่อกดแถบ แล้วหุบเองหลังเลือก */
+const menu=(()=>{
+  const bar=$('bar'),mb=$('mbtn'),mq=matchMedia('(max-width:820px)');let last=scrollY,acc=0,tk=false,lock=0,isOpen=true;
   const open=(o,manual)=>{isOpen=o;bar.classList.toggle('open',o);mb.setAttribute('aria-expanded',o);if(manual)lock=Date.now()+1500};
   new ResizeObserver(()=>document.documentElement.style.setProperty('--stk',bar.offsetHeight+'px')).observe(bar);
-  open(false);setTimeout(()=>open(true),700); // คลี่ออกเองช้าๆ
+  open(false);if(!mq.matches)setTimeout(()=>open(true),700);
   mb.onclick=()=>{open(!isOpen,true);track('click',{k:'menu',o:isOpen?1:0})};
   const onS=()=>{
     tk=false;const y=Math.max(0,scrollY),dy=y-last;last=y;bar.classList.toggle('stuck',y>140);
-    if(Date.now()<lock||(bar.contains(document.activeElement)&&isOpen&&dy>0))return; // กำลังพิมพ์ค้นหา ไม่หุบ
+    if(Date.now()<lock||(bar.contains(document.activeElement)&&isOpen&&dy>0))return;
+    if(mq.matches){if(isOpen&&dy>6)open(false);return}   // มือถือ: เลื่อนลงหุบ ไม่คลี่เองอีก
     if(y<140){acc=0;if(!isOpen)open(true);return}
     if(dy*acc<0)acc=0;acc+=dy;
     if(acc>28&&isOpen){open(false);acc=0}else if(acc<-28&&!isOpen){open(true);acc=0}
   };
   addEventListener('scroll',()=>{if(!tk){tk=true;requestAnimationFrame(onS)}},{passive:true});
+  return {done:()=>{if(mq.matches)setTimeout(()=>open(false,true),450)}}; // เลือกแล้วหุบ (มือถือ)
 })();
-
+/* ลูกศร/เส้นเลื่อนขอบขวา (มือถือ) */
+(()=>{
+  const r=$('rail'),t=$('rThumb'),tr=$('rTrack');let h;
+  const upd=()=>{const H=document.documentElement,max=Math.max(1,H.scrollHeight-innerHeight),th=tr.clientHeight,len=Math.max(26,th*innerHeight/H.scrollHeight);t.style.height=len+'px';t.style.top=(Math.min(1,scrollY/max)*(th-len))+'px';r.classList.add('on');clearTimeout(h);h=setTimeout(()=>r.classList.remove('on'),1600)};
+  addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);
+  $('rUp').onclick=()=>scrollBy({top:-innerHeight*.8,behavior:'smooth'});$('rDn').onclick=()=>scrollBy({top:innerHeight*.8,behavior:'smooth'});
+  tr.onclick=e=>{const b=tr.getBoundingClientRect();scrollTo({top:(e.clientY-b.top)/b.height*(document.documentElement.scrollHeight-innerHeight),behavior:'smooth'})};
+  setTimeout(upd,900);
+})();
 
 fetch('shops.json').then(r=>r.json()).then(d=>{
   S=d;setOrg(SCHOOL.lat,SCHOOL.lng,SCHOOL.name,false);
