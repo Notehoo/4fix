@@ -118,7 +118,7 @@ main{max-width:1100px;margin:auto;display:grid;grid-template-columns:minmax(0,1f
 .addr{margin-top:2px;font-size:15px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .acts{margin-top:6px;display:flex;gap:6px}
 .a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:700;font-size:15.5px;border-radius:10px;padding:4px 11px;border:1.5px solid var(--line);background:var(--sf2);color:var(--fg);min-height:36px;transition:transform .15s}
-.a.call,.a.go{flex:1 1 auto;justify-content:center}.a.ico{padding:4px 12px}
+.a{white-space:nowrap}.a.call,.a.go{flex:1 1 auto;justify-content:center;padding-inline:9px}.a.ico{padding:4px 9px;min-width:40px;justify-content:center}
 .a:active{transform:scale(.95)}
 .a.call{background:var(--ac);color:var(--acf);border-color:transparent}
 .empty{padding:20px 8px 30px;text-align:center;color:var(--mut)}
@@ -233,6 +233,7 @@ addEventListener('error',e=>track('err',{m:String(e.message).slice(0,120)}));
 
 const CATS={cam:['📷','กล้อง','#8a5a2b'],prn:['🖨️','ปริ้นเตอร์','#a63f86'],pc:['💻','คอม/โน้ตบุ๊ก','#0a8bb0'],car:['🚗','รถยนต์','#e0541f'],bat:['🔋','แบตเตอรี่','#dc1f4d'],mob:['📱','มือถือ','#5b5fe3'],tv:['📺','ทีวี','#16924f'],air:['❄️','แอร์','#2a77d4'],app:['🔌','เครื่องใช้ไฟฟ้า','#6f7f2a']};
 const SCHOOL={lat:13.851028,lng:100.403063,name:'โรงเรียนชุมชนวัดบางโค'};
+const HAS_SUB={cam:1}; // หมวดที่มีเมนูย่อย: เลือกแล้วยังไม่หุบเมนู รอเลือกชนิดก่อน
 const SUBS={photo:['📷','กล้องถ่ายภาพ'],cctv:['📹','กล้องวงจรปิด'],other:['🎥','อื่นๆ (กล้องติดรถ โดรน ส่องทางไกล)']};
 let S=[],cat='',sub='',org={...SCHOOL},orgIsGps=false,shown=40,sel=null,anim=true;
 const inCat=(s,c)=>s.cat===c||s.cat2===c,subOf=(s,c)=>s.cat===c?s.sub:s.sub2;
@@ -325,7 +326,7 @@ function setOrg(lat,lng,name,gps){
 function fit(){const a=view().slice(0,15).map(s=>[s.lat,s.lng]);a.push([org.lat,org.lng]);map.fitBounds(a,{padding:[30,30],maxZoom:15})}
 const fl=()=>track('filter',{cat,rad:+$('rad').value,sort:$('sort').value});
 
-$('chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;sub='';shown=40;anim=true;render();fit();fl();menu.done()};
+$('chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;sub='';shown=40;anim=true;render();fit();fl();if(!HAS_SUB[cat])menu.done()};
 $('subs').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sub=b.dataset.s;shown=40;anim=true;render();fit();track('filter',{cat,sub,rad:+$('rad').value,sort:$('sort').value});menu.done()};
 let qt;$('q').oninput=()=>{shown=40;render();clearTimeout(qt);qt=setTimeout(()=>{fit();const q=$('q').value.trim();if(q.length>=2)track('search',{q:q.slice(0,60),cat,n:view().length})},900)};
 $('rad').onchange=()=>{shown=40;anim=true;render();fit();fl();menu.done()};
