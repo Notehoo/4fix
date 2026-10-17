@@ -103,10 +103,12 @@ main{max-width:1100px;margin:auto;display:grid;grid-template-columns:minmax(0,1f
 .meta small{font-weight:500;color:var(--mut)}
 .tr{font-size:13.5px;font-weight:700;border-radius:999px;padding:0 9px;border:1.5px solid currentColor;line-height:1.5}
 .tr.hi{color:var(--ok)}.tr.mid{color:var(--ac)}.tr.lo{color:#b9480f}.tr.no{color:var(--mut);border-style:dashed}
-@media (prefers-color-scheme:dark){.tr.lo{color:#f0894a}}
+@media (prefers-color-scheme:dark){.tr.lo,.pt a em{color:#f0894a}}
 .gal{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none}.gal::-webkit-scrollbar{display:none}
 .gal img{width:112px;height:84px;object-fit:cover;border-radius:10px;display:block;background:var(--sf2)}
 .gcap{font-size:13px;color:var(--mut);margin-top:3px}
+.pr{font-size:13.5px;color:var(--mut)}
+.pt{margin-top:8px;font-size:14px}.pt b{font-weight:700}.pt a{display:block;color:inherit;padding:3px 0;border-top:1px dashed var(--line,#ccc8)}.pt a em{font-style:normal;color:#b9480f;font-weight:700}
 .hist{margin-top:8px;display:grid;gap:2px;font-size:13px;color:var(--mut)}
 .hist div{display:grid;grid-template-columns:30px 1fr 34px;align-items:center;gap:6px}
 .hist b{font-weight:700}.hist em{font-style:normal;text-align:right}
@@ -236,7 +238,7 @@ const SCHOOL={lat:13.851028,lng:100.403063,name:'โรงเรียนชุ�
 const HAS_SUB={cam:1}; // หมวดที่มีเมนูย่อย: เลือกแล้วยังไม่หุบเมนู รอเลือกชนิดก่อน
 const SUBS={photo:['📷','กล้องถ่ายภาพ'],cctv:['📹','กล้องวงจรปิด'],other:['🎥','อื่นๆ (กล้องติดรถ โดรน ส่องทางไกล)']};
 let S=[],cat='',sub='',org={...SCHOOL},orgIsGps=false,shown=40,sel=null,anim=true;
-const inCat=(s,c)=>s.cat===c||s.cat2===c,subOf=(s,c)=>s.cat===c?s.sub:s.sub2;
+const inCat=(s,c)=>s.cat===c||s.cat2===c||!!(s.al&&s.al.includes(c)),subOf=(s,c)=>s.cat===c?s.sub:s.sub2;
 const $=id=>document.getElementById(id);
 const km=(a,b)=>{const r=Math.PI/180,x=(b.lng-a.lng)*r*Math.cos((a.lat+b.lat)/2*r),y=(b.lat-a.lat)*r;return Math.hypot(x,y)*6371};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -263,7 +265,7 @@ function render(){
   $('msum').textContent=(cat?CATS[cat][0]+' '+CATS[cat][1]+(sub?' › '+SUBS[sub][1].split(' ')[0]:''):'🔧 ทุกหมวด')+(+$('rad').value?' · ≤'+$('rad').value+'กม.':'')+' · '+a.length+' ร้าน';
   const q=$('q').value.trim().toLowerCase(),R=+$('rad').value,cn={};
   const cs={};
-  S.forEach(s=>{if(q&&!(s.name+' '+s.addr+' '+s.type).toLowerCase().includes(q))return;if(R&&km(org,s)>R)return;cn[s.cat]=(cn[s.cat]||0)+1;if(s.cat2)cn[s.cat2]=(cn[s.cat2]||0)+1;if(cat==='cam'&&inCat(s,'cam')){const u=subOf(s,'cam');cs[u]=(cs[u]||0)+1}});
+  S.forEach(s=>{if(q&&!(s.name+' '+s.addr+' '+s.type).toLowerCase().includes(q))return;if(R&&km(org,s)>R)return;cn[s.cat]=(cn[s.cat]||0)+1;if(s.cat2)cn[s.cat2]=(cn[s.cat2]||0)+1;if(s.al)s.al.forEach(a=>cn[a]=(cn[a]||0)+1);if(cat==='cam'&&inCat(s,'cam')){const u=subOf(s,'cam');cs[u]=(cs[u]||0)+1}});
   const sb=$('subs');sb.hidden=cat!=='cam';
   if(cat==='cam'){const t=Object.values(cs).reduce((x,y)=>x+y,0);sb.innerHTML=`<button class="chip sm${sub?'':' on'}" data-s="">ทุกชนิด<small>${t}</small></button>`+Object.entries(SUBS).map(([k,v])=>`<button class="chip sm${sub===k?' on':''}" data-s="${k}">${v[0]} ${v[1]}<small>${cs[k]||0}</small></button>`).join('')}
   const tot=Object.values(cn).reduce((x,y)=>x+y,0);
@@ -296,6 +298,9 @@ function galHtml(s,g){
   let h='';
   if(s.h&&s.rv){const mx=Math.max(...s.h,1);h+=`<div class="hist" aria-label="กราฟดาว">${s.h.map((v,i)=>`<div><b>${5-i}★</b><i style="width:${Math.round(v/mx*100)}%"></i><em>${v}</em></div>`).join('')}</div>`}
   if(s.im&&s.im.length)h+=`<div class="gal">${s.im.slice(0,4).map(u=>`<a data-k="photo" href="${g}" target="_blank" rel="noopener"><img loading="lazy" referrerpolicy="no-referrer" src="${IMG}${u}=w300-h225-c" alt="รูปจากผู้ใช้ Google Maps"></a>`).join('')}</div><div class="gcap">รูปจากผู้ใช้ Google Maps${s.ph?` · ทั้งหมด ${s.ph} รูป`:''}</div>`;
+  if(s.pr)h+=`<div class="gcap">💰 ราคาที่ลูกค้าเขียนถึงในรีวิว ${s.pr[2]} ครั้ง (ดูประกอบ — ถามราคาจริงกับร้านก่อนซ่อม)</div>`;
+  if(s.al)h+=`<div class="gcap">🔧 จากรีวิว: ซ่อม${s.al.map(a=>CATS[a][1]).join(', ')}ได้ด้วย</div>`;
+  if(s.pt)h+=`<div class="pt"><b>💬 กระทู้ Pantip ที่พูดถึง "${esc(s.pt.q)}"</b> (${s.pt.n})${s.pt.w?' <em>❗</em>':''}${s.pt.l.map(([u,t,w])=>`<a data-k="pantip" href="https://pantip.com/topic/${esc(u)}" target="_blank" rel="noopener">${w?'<em>❗</em> อ่านกระทู้ที่ Pantip':esc(t)}</a>`).join('')}<div class="gcap">ค้นจากชื่อร้าน อาจรวมสาขาอื่นหรือร้านชื่อคล้าย · อ่านแล้วตัดสินเอง</div></div>`;
   return h;
 }
 function card(s,i){
@@ -306,7 +311,9 @@ function card(s,i){
   <div class="meta"><span><span class="tag">${c[0]} ${c[1]}</span>${esc(s.type||'')}</span>
    <span class="d">${s.d<1?Math.round(s.d*1000)+' ม.':s.d.toFixed(1)+' กม.'}</span>
    ${routeInfo&&routeInfo.id===s.id?`<span class="d">🚗 ${routeInfo.line?'~':''}${routeInfo.km} กม. · ${routeInfo.line?'~':''}${routeInfo.min} นาที</span>`:''}
-   ${rateHtml(s)}
+   ${s.al&&cat&&s.al.includes(cat)?`<span class="tr mid" title="จากข้อความรีวิวใน Google Maps">${CATS[cat][0]} ซ่อม${CATS[cat][1]}ได้ด้วย</span>`:''}
+   ${s.pr?`<span class="pr" title="ราคาที่ลูกค้าเขียนในรีวิว ${s.pr[2]} ครั้ง ไม่ใช่ราคาจากร้าน">💰 ${s.pr[0]===s.pr[1]?'~'+s.pr[0].toLocaleString():s.pr[0].toLocaleString()+'–'+s.pr[1].toLocaleString()} บ.</span>`:''}
+   ${rateHtml(s)}${s.pt?`<span class="tr ${s.pt.w?'lo':'mid'}" title="มีกระทู้ Pantip พูดถึง">💬 ${s.pt.n}${s.pt.w?' ❗':''}</span>`:''}
    ${s.hours?`<span>${esc(s.hours)}</span>`:''}</div>
   ${s.addr?`<div class="addr">${esc(s.addr)}</div>`:''}
   ${sel===s.id?galHtml(s,g):''}
@@ -459,7 +466,7 @@ fetch('shops.json').then(r=>r.json()).then(d=>{
   S=d;setOrg(SCHOOL.lat,SCHOOL.lng,SCHOOL.name,false);
   loadExtra().then(()=>{render();handleParams()});
   track('pv',{p:location.pathname,w:innerWidth,h:innerHeight,sw:screen.width,lang:navigator.language,tz:Intl.DateTimeFormat().resolvedOptions().timeZone,dark:matchMedia('(prefers-color-scheme:dark)').matches?1:0,conn:(navigator.connection||{}).effectiveType||'',n:S.length});
-}).catch(()=>{$('list').innerHTML='<div class="empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้า</div>'});
+}).catch(e=>{console.error(e);window.__err=String(e&&e.stack||e);$('list').innerHTML='<div class="empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้า</div>'});
 </script>
 </body>
 </html>
