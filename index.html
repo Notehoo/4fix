@@ -269,7 +269,7 @@ function render(){
   const tot=Object.values(cn).reduce((x,y)=>x+y,0);
   $('chips').innerHTML=`<button class="chip${cat?'':' on'}" data-c="">ทั้งหมด<small>${tot}</small></button>`+Object.entries(CATS).filter(([k])=>cn[k]).map(([k,v])=>`<button class="chip${cat===k?' on':''}" data-c="${k}">${v[0]} ${v[1]}<small>${cn[k]}</small></button>`).join('');
   lay.clearLayers();
-  a.forEach(s=>{L.circleMarker([s.lat,s.lng],{radius:7,color:'#fff',weight:1.5,fillColor:CATS[s.cat][2],fillOpacity:.95}).addTo(lay).on('click',()=>{track('click',{k:'marker',id:s.id,name:s.name,cat:s.cat});pick(s.id)}).bindTooltip(esc(s.name))});
+  a.forEach(s=>{L.circleMarker([s.lat,s.lng],{radius:7,color:'#fff',weight:1.5,fillColor:CATS[s.cat][2],fillOpacity:.95,bubblingMouseEvents:false}).addTo(lay).on('click',()=>{track('click',{k:'marker',id:s.id,name:s.name,cat:s.cat});pick(s.id)}).bindTooltip(esc(s.name))});
   $('list').innerHTML=a.length?a.slice(0,shown).map((s,i)=>card(s,i)).join('')+(a.length>shown?`<button class="btn more" id="more">แสดงเพิ่ม (อีก ${a.length-shown})</button>`:''):`<div class="empty"><img src="mascot.jpg" alt="" width="170" height="170"><p>ไม่พบร้านตามเงื่อนไข<br>ลองขยายระยะหรือเลือก “ทั้งหมด”</p></div>`;
   if(!a.length)track('empty',{q:$('q').value.trim().slice(0,60),cat,rad:R});
   anim=false;
@@ -305,6 +305,7 @@ function card(s,i){
   <div class="hd"><h3>${esc(s.name)}</h3>${s.im&&s.im.length?`<img class="th" loading="lazy" referrerpolicy="no-referrer" src="${IMG}${s.im[0]}=w120-h120-c" alt="">`:''}</div>
   <div class="meta"><span><span class="tag">${c[0]} ${c[1]}</span>${esc(s.type||'')}</span>
    <span class="d">${s.d<1?Math.round(s.d*1000)+' ม.':s.d.toFixed(1)+' กม.'}</span>
+   ${routeInfo&&routeInfo.id===s.id?`<span class="d">🚗 ${routeInfo.line?'~':''}${routeInfo.km} กม. · ${routeInfo.line?'~':''}${routeInfo.min} นาที</span>`:''}
    ${rateHtml(s)}
    ${s.hours?`<span>${esc(s.hours)}</span>`:''}</div>
   ${s.addr?`<div class="addr">${esc(s.addr)}</div>`:''}
@@ -317,11 +318,36 @@ function pick(id){
   render();const el=document.getElementById('c-'+id);if(el)el.scrollIntoView({block:'center',behavior:'smooth'});
   ring(s);
 }
-function ring(s){if(selMk)map.removeLayer(selMk);selMk=L.marker([s.lat,s.lng],{interactive:false,icon:L.divIcon({className:'',html:'<span class="pulse"></span>',iconSize:[0,0]})}).addTo(map)}
+function ring(s){if(selMk)map.removeLayer(selMk);selMk=L.marker([s.lat,s.lng],{interactive:false,icon:L.divIcon({className:'',html:'<span class="pulse"></span>',iconSize:[0,0]})}).addTo(map);showRoute(s)}
+/* เส้นทางจากแมว (จุดที่ฉันอยู่) ไปร้านที่เลือก — ถนนจริงจาก OSRM, ล้มเหลวก็ลากเส้นตรงประ */
+const routeLayer=L.layerGroup().addTo(map);let routeInfo=null,routeAbort=null;const routeCache={};
+function drawRoute(pts,dashed){
+  routeLayer.clearLayers();
+  L.polyline(pts,{color:'#fff',weight:9,opacity:.9,lineCap:'round',lineJoin:'round',interactive:false}).addTo(routeLayer);
+  const l=L.polyline(pts,{color:'#e07a1f',weight:5,opacity:.95,lineCap:'round',lineJoin:'round',dashArray:dashed?'2 10':null,interactive:false}).addTo(routeLayer);
+  return l;
+}
+async function showRoute(s){
+  if(routeAbort)routeAbort.abort();routeLayer.clearLayers();routeInfo=null;
+  const key=org.lat.toFixed(4)+','+org.lng.toFixed(4)+'>'+s.id;
+  const fitTo=l=>{const b=l.getBounds();if(b.isValid())map.fitBounds(b,{padding:[46,46],maxZoom:16})};
+  if(routeCache[key]){const r=routeCache[key];fitTo(drawRoute(r.pts,r.dashed));routeInfo={id:s.id,km:r.km,min:r.min,line:r.dashed};render();return}
+  fitTo(drawRoute([[org.lat,org.lng],[s.lat,s.lng]],true)); // ระหว่างรอ: เส้นตรงประไว้ก่อน
+  const my=routeAbort=new AbortController();let tmo=false;const to=setTimeout(()=>{tmo=true;my.abort()},9000);
+  try{
+    const u=`https://routing.openstreetmap.de/routed-car/route/v1/driving/${org.lng},${org.lat};${s.lng},${s.lat}?overview=full&geometries=geojson`;
+    const j=await (await fetch(u,{signal:my.signal})).json();const r=j.routes&&j.routes[0];if(!r)throw 0;
+    const pts=r.geometry.coordinates.map(c=>[c[1],c[0]]),km=Math.round(r.distance/100)/10,min=Math.max(1,Math.round(r.duration/60));
+    routeCache[key]={pts,km,min,dashed:false};if(sel!==s.id)return;
+    fitTo(drawRoute(pts,false));routeInfo={id:s.id,km,min};render();
+  }catch(e){if(my.signal.aborted&&!tmo)return;if(sel===s.id){const k=Math.round(s.d*10)/10;routeInfo={id:s.id,km:k,min:Math.max(1,Math.round(s.d/0.5)),line:true};render()}}
+  finally{clearTimeout(to)}
+}
 function setOrg(lat,lng,name,gps){
   org={lat,lng};orgIsGps=gps;me.setLatLng([lat,lng]);
   $('where').innerHTML=`ระยะทางนับจาก <b>${esc(name)}</b>${gps?'':' · กด “ใกล้ฉัน” เพื่อใช้ตำแหน่งปัจจุบัน'}`;
   shown=40;anim=true;render();fit();
+  if(sel){const t=S.find(x=>x.id===sel);if(t)setTimeout(()=>showRoute(t),80)}
 }
 function fit(){const a=view().slice(0,15).map(s=>[s.lat,s.lng]);a.push([org.lat,org.lng]);map.fitBounds(a,{padding:[30,30],maxZoom:15})}
 const fl=()=>track('filter',{cat,rad:+$('rad').value,sort:$('sort').value});
